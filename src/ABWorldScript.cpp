@@ -141,11 +141,16 @@ void AutoBalance_WorldScript::SetInitialWorldSettings()
     timewalkingBossToken        = sConfigMgr->GetOption<uint32>("AutoBalance.Timewalking.BossToken", 9000051);
     timewalkingStatMultiplier   = sConfigMgr->GetOption<float> ("AutoBalance.Timewalking.StatMultiplier", 1.5f);
     timewalkingMapIds.clear();
-    std::string twMapStr = sConfigMgr->GetOption<std::string>("AutoBalance.Timewalking.MapIDs", "");
-    for (auto& token : Acore::Tokenize(twMapStr, ',', true))
     {
-        if (auto id = Acore::StringTo<uint32>(token))
-            timewalkingMapIds.insert(*id);
+        std::string twMapStr = sConfigMgr->GetOption<std::string>("AutoBalance.Timewalking.MapIDs", "");
+        std::string token;
+        std::stringstream ss(twMapStr);
+        while (std::getline(ss, token, ','))
+        {
+            uint32 id = (uint32)atoi(token.c_str());
+            if (id > 0)
+                timewalkingMapIds.insert(id);
+        }
     }
 
     //
