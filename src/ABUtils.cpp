@@ -1097,12 +1097,12 @@ AutoBalanceInflectionPointSettings getInflectionPointSettings (InstanceMap* inst
             inflectionValue *= bossInflectionPointMultiplier;
     }
 
-    // Timewalking mode: apply stat multiplier only for LFG instances
+    // Timewalking mode: bypass player-count scaling, use flat TW multiplier for all group sizes
     if (timewalkingMode && timewalkingMapIds.count(mapId))
     {
         AutoBalanceMapInfo* twMapInfo = GetMapInfo(instanceMap);
         if (twMapInfo && twMapInfo->isLFGInstance)
-            curveCeiling *= timewalkingStatMultiplier;
+            return AutoBalanceInflectionPointSettings(inflectionValue, timewalkingStatMultiplier, timewalkingStatMultiplier);
     }
 
     return AutoBalanceInflectionPointSettings(inflectionValue, curveFloor, curveCeiling);

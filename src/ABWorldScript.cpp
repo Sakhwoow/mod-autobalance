@@ -139,6 +139,7 @@ void AutoBalance_WorldScript::SetInitialWorldSettings()
 
     timewalkingMode             = sConfigMgr->GetOption<bool>  ("AutoBalance.Timewalking.Enable", false);
     timewalkingBossToken        = sConfigMgr->GetOption<uint32>("AutoBalance.Timewalking.BossToken", 9000051);
+    timewalkingCompletionTokens = sConfigMgr->GetOption<uint32>("AutoBalance.Timewalking.CompletionTokens", 5);
     timewalkingStatMultiplier   = sConfigMgr->GetOption<float> ("AutoBalance.Timewalking.StatMultiplier", 1.5f);
     timewalkingMapIds.clear();
     {

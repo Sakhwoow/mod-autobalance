@@ -88,6 +88,7 @@ extern uint64_t                                                      globalConfi
 extern bool                                                          timewalkingMode;
 extern std::set<uint32>                                              timewalkingMapIds;
 extern uint32                                                        timewalkingBossToken;
+extern uint32                                                        timewalkingCompletionTokens;
 extern float                                                         timewalkingStatMultiplier;
 
 // 

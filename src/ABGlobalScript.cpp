@@ -5,9 +5,9 @@
 #include "ABUtils.h"
 #include "Bot/PlayerbotAI.h"
 
-void AutoBalance_GlobalScript::OnAfterUpdateEncounterState(Map* map, EncounterCreditType type, uint32 /*creditEntry*/, Unit* /*source*/, Difficulty /*difficulty_fixed*/, DungeonEncounterList const* /*encounters*/, uint32 /*dungeonCompleted*/, bool updated)
+void AutoBalance_GlobalScript::OnAfterUpdateEncounterState(Map* map, EncounterCreditType type, uint32 /*creditEntry*/, Unit* /*source*/, Difficulty /*difficulty_fixed*/, DungeonEncounterList const* /*encounters*/, uint32 dungeonCompleted, bool updated)
 {
-    if (!updated || type != ENCOUNTER_CREDIT_KILL_CREATURE || !map->IsDungeon())
+    if (!updated || !map->IsDungeon())
         return;
 
     // --- Timewalking mode: reward only real players in TW maps ---
@@ -15,7 +15,7 @@ void AutoBalance_GlobalScript::OnAfterUpdateEncounterState(Map* map, EncounterCr
     {
         if (!timewalkingBossToken || timewalkingMapIds.empty())
             return;
-        if (timewalkingMapIds.find(map->GetId()) == timewalkingMapIds.end())
+        if (!timewalkingMapIds.count(map->GetId()))
             return;
         AutoBalanceMapInfo* twMapInfo = GetMapInfo(map);
         if (!twMapInfo->isLFGInstance)
@@ -28,17 +28,22 @@ void AutoBalance_GlobalScript::OnAfterUpdateEncounterState(Map* map, EncounterCr
         for (Map::PlayerList::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
         {
             Player* player = itr->GetSource();
-            if (!player || player->IsGameMaster())
+            if (!player || player->IsGameMaster() || !IsRealPlayer(player))
                 continue;
-            if (!IsRealPlayer(player))
-                continue;
-            player->AddItem(timewalkingBossToken, 1);
+
+            // 1 token per boss kill
+            if (type == ENCOUNTER_CREDIT_KILL_CREATURE)
+                player->AddItem(timewalkingBossToken, 1);
+
+            // 5 tokens (configurable) for full dungeon completion
+            if (dungeonCompleted && timewalkingCompletionTokens)
+                player->AddItem(timewalkingBossToken, timewalkingCompletionTokens);
         }
         return;
     }
 
     // --- Original reward logic ---
-    if (!rewardEnabled)
+    if (!rewardEnabled || type != ENCOUNTER_CREDIT_KILL_CREATURE)
         return;
 
     AutoBalanceMapInfo* mapABInfo = GetMapInfo(map);
