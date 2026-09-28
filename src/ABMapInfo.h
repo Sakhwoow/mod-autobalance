@@ -58,5 +58,6 @@ public:
 
     uint8    prevMapLevel                       = 0;     // Used to reduce calculations when they are not necessary
     bool     initialized                        = false; // Whether or not the map has been initialized
+    bool     isLFGInstance                      = false; // Set when all players entered via LFG queue (Timewalking gate)
 };
 #endif

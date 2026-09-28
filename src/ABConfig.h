@@ -14,6 +14,7 @@
 
 #include <list>
 #include <map>
+#include <set>
 
 extern std::map<uint32, AutoBalanceInflectionPointSettings>          dungeonOverrides;
 extern std::map<uint32, AutoBalanceInflectionPointSettings>          bossOverrides;
@@ -79,6 +80,15 @@ extern float                                                         RewardScali
 extern float                                                         RewardScalingMoneyModifier;
 
 extern uint64_t                                                      globalConfigTime;
+
+//
+// Timewalking.*
+//
+
+extern bool                                                          timewalkingMode;
+extern std::set<uint32>                                              timewalkingMapIds;
+extern uint32                                                        timewalkingBossToken;
+extern float                                                         timewalkingStatMultiplier;
 
 // 
 // Enable.*

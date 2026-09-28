@@ -29,6 +29,14 @@ void AutoBalance_AllMapScript::OnPlayerEnterAll(Map* map, Player* player)
     // get the map's info
     AutoBalanceMapInfo* mapABInfo = GetMapInfo(map);
 
+    // Timewalking LFG gate: mark instance as LFG if this player came from the LFG queue
+    if (timewalkingMode && !timewalkingMapIds.empty() && timewalkingMapIds.count(map->GetId()))
+    {
+        Group* group = player->GetGroup();
+        if (group && group->isLFGGroup())
+            mapABInfo->isLFGInstance = true;
+    }
+
     // store the previous difficulty for comparison later
     int prevAdjustedPlayerCount = mapABInfo->adjustedPlayerCount;
 

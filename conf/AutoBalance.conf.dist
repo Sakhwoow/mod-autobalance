@@ -983,3 +983,54 @@ AutoBalance.PerDungeonPlayerCounts=
 # Their entire functionality (and more) has been moved to new settings referenced in this config file.
 AutoBalance.DungeonsOnly=
 AutoBalance.levelUseDbValuesWhenExists=
+
+##########################
+#
+# Timewalking Mode
+#
+##########################
+
+#
+#     AutoBalance.Timewalking.Enable
+#        When enabled, AutoBalance works ONLY for maps listed in AutoBalance.Timewalking.MapIDs.
+#        All other dungeons are unaffected by this module.
+#        On boss kill, each real player (not a bot) in the map receives AutoBalance.Timewalking.BossToken x1.
+#        The legacy reward system (AutoBalance.reward.*) is bypassed when this is enabled.
+#        Default: 0 (disabled)
+AutoBalance.Timewalking.Enable = 0
+
+#
+#     AutoBalance.Timewalking.BossToken
+#        Item ID to give to real players on boss kill in a Timewalking instance.
+#        Default: 9000051 (Token Azeroth)
+AutoBalance.Timewalking.BossToken = 9000051
+
+#
+#     AutoBalance.Timewalking.StatMultiplier
+#        Multiplier applied to CurveCeiling for Timewalking instances entered via LFG.
+#        1.0 = original mob strength at full group; 1.5 = 150% (harder than original).
+#        Default: 1.5
+AutoBalance.Timewalking.StatMultiplier = 1.5
+
+#
+#     AutoBalance.Timewalking.MapIDs
+#        Comma-separated list of map IDs that are considered Timewalking dungeons.
+#        Scaling and boss rewards apply ONLY to these maps when Timewalking.Enable = 1.
+#
+#        Classic dungeons:
+#          36  - Deadmines            33  - Shadowfang Keep      43  - Wailing Caverns
+#          48  - Blackfathom Deeps    34  - Stockade             90  - Gnomeregan
+#          47  - Razorfen Kraul       189 - Scarlet Monastery    129 - Razorfen Downs
+#          70  - Uldaman             209  - Zul'Farrak           349 - Maraudon
+#          109 - Sunken Temple       230  - Blackrock Depths     229 - Blackrock Spire
+#          289 - Scholomance         329  - Stratholme           389 - Ragefire Chasm
+#          429 - Dire Maul (West)    430  - Dire Maul (North)   431 - Dire Maul (East)
+#
+#        Burning Crusade dungeons:
+#          543 - Hellfire Ramparts   542  - Blood Furnace        547 - Slave Pens
+#          546 - Underbog            557  - Mana-Tombs           558 - Auchenai Crypts
+#          560 - Durnholde Keep      269  - Dark Portal          555 - Shadow Labyrinth
+#          556 - Sethekk Halls       545  - Steamvault           553 - Botanica
+#          554 - Mechanar            540  - Shattered Halls      552 - Arcatraz
+#
+AutoBalance.Timewalking.MapIDs = "36, 33, 43, 48, 34, 90, 47, 189, 129, 70, 209, 349, 109, 230, 229, 289, 329, 389, 429, 430, 431, 543, 542, 547, 546, 557, 558, 560, 269, 555, 556, 545, 553, 554, 540, 552"

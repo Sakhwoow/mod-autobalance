@@ -86,6 +86,11 @@ uint32        rewardRaid;
 uint32        rewardDungeon;
 uint32        MinPlayerReward;
 
+bool          timewalkingMode;
+std::set<uint32> timewalkingMapIds;
+uint32        timewalkingBossToken;
+float         timewalkingStatMultiplier;
+
 bool          Announcement;
 
 

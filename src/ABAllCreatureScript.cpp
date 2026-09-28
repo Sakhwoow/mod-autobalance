@@ -106,6 +106,16 @@ void AutoBalance_AllCreatureScript::OnCreatureSelectLevel(const CreatureTemplate
         return;
     }
 
+    // in Timewalking mode, only process maps entered via LFG queue
+    if (timewalkingMode)
+    {
+        if (timewalkingMapIds.find(creature->GetMap()->GetId()) == timewalkingMapIds.end())
+            return;
+        AutoBalanceMapInfo* twMapInfo = GetMapInfo(creature->GetMap());
+        if (!twMapInfo->isLFGInstance)
+            return;
+    }
+
     // get the creature's info
     AutoBalanceCreatureInfo* creatureABInfo = creature->CustomData.GetDefault<AutoBalanceCreatureInfo>("AutoBalanceCreatureInfo");
 

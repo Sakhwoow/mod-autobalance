@@ -137,6 +137,17 @@ void AutoBalance_WorldScript::SetInitialWorldSettings()
     rewardDungeon               = sConfigMgr->GetOption<uint32>("AutoBalance.reward.dungeonToken", 47241);
     MinPlayerReward             = sConfigMgr->GetOption<float> ("AutoBalance.reward.MinPlayerReward", 1);
 
+    timewalkingMode             = sConfigMgr->GetOption<bool>  ("AutoBalance.Timewalking.Enable", false);
+    timewalkingBossToken        = sConfigMgr->GetOption<uint32>("AutoBalance.Timewalking.BossToken", 9000051);
+    timewalkingStatMultiplier   = sConfigMgr->GetOption<float> ("AutoBalance.Timewalking.StatMultiplier", 1.5f);
+    timewalkingMapIds.clear();
+    std::string twMapStr = sConfigMgr->GetOption<std::string>("AutoBalance.Timewalking.MapIDs", "");
+    for (auto& token : Acore::Tokenize(twMapStr, ',', true))
+    {
+        if (auto id = Acore::StringTo<uint32>(token))
+            timewalkingMapIds.insert(*id);
+    }
+
     //
     // InflectionPoint*
     // warn the console if deprecated values are detected

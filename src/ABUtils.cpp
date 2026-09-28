@@ -1097,6 +1097,14 @@ AutoBalanceInflectionPointSettings getInflectionPointSettings (InstanceMap* inst
             inflectionValue *= bossInflectionPointMultiplier;
     }
 
+    // Timewalking mode: apply stat multiplier only for LFG instances
+    if (timewalkingMode && timewalkingMapIds.count(mapId))
+    {
+        AutoBalanceMapInfo* twMapInfo = GetMapInfo(map);
+        if (twMapInfo && twMapInfo->isLFGInstance)
+            curveCeiling *= timewalkingStatMultiplier;
+    }
+
     return AutoBalanceInflectionPointSettings(inflectionValue, curveFloor, curveCeiling);
 }
 
