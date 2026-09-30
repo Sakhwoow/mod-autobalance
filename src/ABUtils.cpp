@@ -2303,6 +2303,30 @@ bool ShouldMapBeEnabled(Map* map)
             return false;
         }
 
+        // Timewalking-only deployment: with timewalkingMode on, AutoBalance's general
+        // party-size scaling must not run on regular dungeons — only genuine TW-LFG
+        // instances get scaled at all. Everything else (including the general Enable5M/
+        // Enable5MHeroic/etc. flags below) is bypassed for non-TW maps.
+        if (timewalkingMode)
+        {
+            if (timewalkingMapIds.empty() || !timewalkingMapIds.count(map->GetId()))
+            {
+                LOG_DEBUG("module.AutoBalance", "AutoBalance::ShouldMapBeEnabled: {} ({}{}) - Not enabled: Timewalking-only mode and this map is not in the Timewalking pool.",
+                          map->GetMapName(), map->GetId(),
+                          map->GetInstanceId() ? "-" + std::to_string(map->GetInstanceId()) : "");
+                return false;
+            }
+
+            AutoBalanceMapInfo* twMapInfo = GetMapInfo(instanceMap);
+            if (!twMapInfo || !twMapInfo->isLFGInstance)
+            {
+                LOG_DEBUG("module.AutoBalance", "AutoBalance::ShouldMapBeEnabled: {} ({}{}) - Not enabled: Timewalking-only mode and this instance was not entered via the TW LFG queue.",
+                          map->GetMapName(), map->GetId(),
+                          map->GetInstanceId() ? "-" + std::to_string(map->GetInstanceId()) : "");
+                return false;
+            }
+        }
+
         // if the Dungeon is disabled via configuration, do not enable it
         if (isDungeonInDisabledDungeonIds(map->GetId()))
         {
