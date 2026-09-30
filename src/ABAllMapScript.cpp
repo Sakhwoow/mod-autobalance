@@ -5,6 +5,7 @@
 #include "ABUtils.h"
 
 #include "Chat.h"
+#include "LFGMgr.h"
 #include "Message.h"
 
 
@@ -29,11 +30,17 @@ void AutoBalance_AllMapScript::OnPlayerEnterAll(Map* map, Player* player)
     // get the map's info
     AutoBalanceMapInfo* mapABInfo = GetMapInfo(map);
 
-    // Timewalking LFG gate: mark instance as LFG if this player came from the LFG queue
+    // Timewalking LFG gate: mark instance as LFG only if the group is CURRENTLY in this
+    // dungeon via the LFG queue. Group::isLFGGroup() is sticky for the group's whole
+    // lifetime (set once by ConvertToLFG(), never cleared), so a party that did one TW
+    // run and later walks into an unrelated dungeon manually would otherwise still read
+    // as an LFG group and get incorrectly scaled/rewarded as Timewalking there too.
     if (timewalkingMode && !timewalkingMapIds.empty() && timewalkingMapIds.count(map->GetId()))
     {
         Group* group = player->GetGroup();
-        if (group && group->isLFGGroup())
+        if (group && group->isLFGGroup() &&
+            sLFGMgr->GetState(group->GetGUID()) == lfg::LFG_STATE_DUNGEON &&
+            sLFGMgr->GetDungeonMapId(group->GetGUID()) == map->GetId())
             mapABInfo->isLFGInstance = true;
     }
 
