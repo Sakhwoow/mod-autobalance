@@ -5,6 +5,29 @@
 #include "ABUtils.h"
 #include "Bot/PlayerbotAI.h"
 
+namespace
+{
+    // Player::AddItem() hardcodes SendNewItem's "received" flag to true, which
+    // picks the client's "from NPC" toast/chat wording — that template doesn't
+    // interpolate the count, so stacked grants (e.g. the 5x TW completion bonus)
+    // show up as "Получено: Token Azeroth" with no number. Loot-style delivery
+    // (received=false) uses the wording that does show "xN", matching how real
+    // Emblems display when looted.
+    void GrantTimewalkingToken(Player* player, uint32 itemId, uint32 count)
+    {
+        ItemPosCountVec dest;
+        uint32 noSpaceForCount = 0;
+        InventoryResult msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, itemId, count, &noSpaceForCount);
+        if (msg != EQUIP_ERR_OK)
+            count -= noSpaceForCount;
+        if (count == 0 || dest.empty())
+            return;
+
+        if (Item* item = player->StoreNewItem(dest, itemId, true))
+            player->SendNewItem(item, count, false, false);
+    }
+}
+
 void AutoBalance_GlobalScript::OnAfterUpdateEncounterState(Map* map, EncounterCreditType type, uint32 /*creditEntry*/, Unit* /*source*/, Difficulty /*difficulty_fixed*/, DungeonEncounterList const* /*encounters*/, uint32 dungeonCompleted, bool updated)
 {
     if (!updated || !map->IsDungeon())
@@ -33,11 +56,11 @@ void AutoBalance_GlobalScript::OnAfterUpdateEncounterState(Map* map, EncounterCr
 
             // 1 token per boss kill
             if (type == ENCOUNTER_CREDIT_KILL_CREATURE)
-                player->AddItem(timewalkingBossToken, 1);
+                GrantTimewalkingToken(player, timewalkingBossToken, 1);
 
             // 5 tokens (configurable) for full dungeon completion
             if (dungeonCompleted && timewalkingCompletionTokens)
-                player->AddItem(timewalkingBossToken, timewalkingCompletionTokens);
+                GrantTimewalkingToken(player, timewalkingBossToken, timewalkingCompletionTokens);
         }
         return;
     }
