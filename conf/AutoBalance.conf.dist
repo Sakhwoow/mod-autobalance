@@ -1006,6 +1006,18 @@ AutoBalance.Timewalking.Enable = 0
 AutoBalance.Timewalking.BossToken = 9000051
 
 #
+#     AutoBalance.Timewalking.CompletionTokens
+#        AutoBalance.Timewalking.BossToken awarded to each real player (not a bot) when the
+#        dungeon itself finishes (on top of the per-boss-kill token above), independent of
+#        any LFG completion quest reward. If the server's LFG daily/repeatable Timewalking
+#        quest (lfg_dungeon_rewards) ALSO grants this same item, set this to 0 to avoid
+#        awarding it twice for one completion — the quest's own RewardItem/RewardAmount is
+#        what drives the "x5" count shown in the Dungeon Finder reward popup, so disabling
+#        it here (rather than on the quest) keeps that display intact.
+#        Default: 5
+AutoBalance.Timewalking.CompletionTokens = 5
+
+#
 #     AutoBalance.Timewalking.StatMultiplier
 #        Multiplier applied to CurveCeiling for Timewalking instances entered via LFG.
 #        1.0 = original mob strength at full group; 1.5 = 150% (harder than original).
