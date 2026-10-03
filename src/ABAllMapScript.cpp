@@ -35,13 +35,19 @@ void AutoBalance_AllMapScript::OnPlayerEnterAll(Map* map, Player* player)
     // lifetime (set once by ConvertToLFG(), never cleared), so a party that did one TW
     // run and later walks into an unrelated dungeon manually would otherwise still read
     // as an LFG group and get incorrectly scaled/rewarded as Timewalking there too.
+    // The map id alone is not enough: normal LFG dungeons share these map ids, so the
+    // queued dungeon must itself be a Timewalking pool dungeon.
     if (timewalkingMode && !timewalkingMapIds.empty() && timewalkingMapIds.count(map->GetId()))
     {
         Group* group = player->GetGroup();
         if (group && group->isLFGGroup() &&
             sLFGMgr->GetState(group->GetGUID()) == lfg::LFG_STATE_DUNGEON &&
             sLFGMgr->GetDungeonMapId(group->GetGUID()) == map->GetId())
-            mapABInfo->isLFGInstance = true;
+        {
+            lfg::LFGDungeonData const* lfgDungeon = sLFGMgr->GetLFGDungeon(sLFGMgr->GetDungeon(group->GetGUID()));
+            if (lfgDungeon && lfgDungeon->group == lfg::LFG_DUNGEON_GROUP_TIMEWALKING)
+                mapABInfo->isLFGInstance = true;
+        }
     }
 
     // store the previous difficulty for comparison later
